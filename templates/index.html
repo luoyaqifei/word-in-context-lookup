@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gemini Query with Flask</title>
+    <style>
+        textarea { width: 100%; height: 150px; }
+        .response { margin-top: 20px; background: #f0f0f0; padding: 10px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h2>Query Gemini</h2>
+    <form method="POST">
+        <label for="input_text">Input your text:</label><br>
+        <textarea name="input_text" id="input_text" required>{{ input_text }}</textarea><br>
+        <button type="submit">Submit</button>
+    </form>
+    {% if response %}
+    <div class="response">
+        <strong>Gemini Response:</strong>
+        <p>{{ response }}</p>
+    </div>
+    {% endif %}
+</body>
+</html>
