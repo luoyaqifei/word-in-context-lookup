@@ -11,7 +11,7 @@ class VocabCard(BaseModel):
     Word: str
     Explanation: str
     Pronunciation: str
-    Illustration_Link: str | None = None
+    Illustration_Prompt: str | None = None    
     Examples: list[str]
     Registers: list[str]
     Synonyms: list[str]
@@ -54,17 +54,6 @@ def generate_vocabulary_cards(vocab_cards: list[VocabCard]):
             raise ValueError(f"Invalid vocab card object received: {type(vocab_card)}")
         
         print(f"Processing vocab card: {vocab_card.Word}")
-        if vocab_card.Illustration_Link:
-            # use native method to verify the illustration link to ensure it's valid
-            try:                
-                response = requests.head(vocab_card.Illustration_Link, allow_redirects=True)
-                if response.status_code != 200:
-                    print(f"Warning: Illustration link for '{vocab_card.Word}' is invalid (Status Code: {response.status_code})")
-                    vocab_card.Illustration_Link = None # Remove invalid link
-            except requests.exceptions.RequestException as e:
-                print(f"Warning: Could not verify illustration link for '{vocab_card.Word}': {e}")
-                vocab_card.Illustration_Link = None # Remove invalid link
-                
         markdown = f"""# Word: {vocab_card.Word}
 **Word:** {vocab_card.Word}
 
@@ -80,9 +69,9 @@ def generate_vocabulary_cards(vocab_cards: list[VocabCard]):
 **Synonyms:** {', '.join(vocab_card.Synonyms)}
 
 **In Context:** {vocab_card.In_Context}
+
+**Illustration Prompt:** {vocab_card.Illustration_Prompt}
 """
-        if vocab_card.Illustration_Link:
-            markdown += f"\n\n![Illustration]({vocab_card.Illustration_Link})"
         print(markdown)
         files.append({"markdown": markdown, "filename": vocab_card.Word+".md"})
     # If vocab_cards (input) was empty, files will be empty.

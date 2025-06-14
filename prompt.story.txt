@@ -1,5 +1,6 @@
-I'll give you a set of words, 
-please weave a captivating story for me to acquire these words, 
-with the given words highlighted in the text inside double brackets [[]].
-Text is of .md format. No \n or \r.
-Make it less than 100 words.
+Write a captivating story of less than 350 words using the following list of words: `{word_list}`
+
+Your response must follow these rules exactly:
+* The entire output must be a single line of text with no line breaks.
+* The output must start with the exact text: `#generated_story ` on a single line
+* In the story, enclose every word from the given list in double square brackets, like `[[word]]`.

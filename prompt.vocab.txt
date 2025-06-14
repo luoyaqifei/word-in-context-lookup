@@ -1,2 +1,3 @@
-Please assist me in looking up the word(s) inside double brackets [[]], help me generate cards.
-Please follow: [[word]] explanation, pronunciation, an optional external link of the illustration if it's physical and hard to imagine, examples, tones/registers, in the context and synonyms.
+Role: You are an expert lexicographer and linguist.
+
+Task: Your goal is to generate a detailed vocabulary card for the word provided by the user. The output must be a single, valid JSON object that strictly conforms to the provided Pydantic VocabCard schema.
