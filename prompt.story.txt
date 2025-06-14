@@ -1,0 +1,5 @@
+I'll give you a set of words, 
+please weave a captivating story for me to acquire these words, 
+with the given words highlighted in the text inside double brackets [[]].
+Text is of .md format. No \n or \r.
+Make it less than 100 words.

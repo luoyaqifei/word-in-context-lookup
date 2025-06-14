@@ -3,7 +3,7 @@ from google import genai as genai_google # Renamed to avoid conflict with local 
 from google.genai import types
 from pydantic import BaseModel
 from openai import OpenAI
-
+import requests
 import os
 import configparser
 
@@ -11,6 +11,7 @@ class VocabCard(BaseModel):
     Word: str
     Explanation: str
     Pronunciation: str
+    Illustration_Link: str | None = None
     Examples: list[str]
     Registers: list[str]
     Synonyms: list[str]
@@ -53,6 +54,17 @@ def generate_vocabulary_cards(vocab_cards: list[VocabCard]):
             raise ValueError(f"Invalid vocab card object received: {type(vocab_card)}")
         
         print(f"Processing vocab card: {vocab_card.Word}")
+        if vocab_card.Illustration_Link:
+            # use native method to verify the illustration link to ensure it's valid
+            try:                
+                response = requests.head(vocab_card.Illustration_Link, allow_redirects=True)
+                if response.status_code != 200:
+                    print(f"Warning: Illustration link for '{vocab_card.Word}' is invalid (Status Code: {response.status_code})")
+                    vocab_card.Illustration_Link = None # Remove invalid link
+            except requests.exceptions.RequestException as e:
+                print(f"Warning: Could not verify illustration link for '{vocab_card.Word}': {e}")
+                vocab_card.Illustration_Link = None # Remove invalid link
+                
         markdown = f"""# Word: {vocab_card.Word}
 **Word:** {vocab_card.Word}
 
@@ -69,6 +81,8 @@ def generate_vocabulary_cards(vocab_cards: list[VocabCard]):
 
 **In Context:** {vocab_card.In_Context}
 """
+        if vocab_card.Illustration_Link:
+            markdown += f"\n\n![Illustration]({vocab_card.Illustration_Link})"
         print(markdown)
         files.append({"markdown": markdown, "filename": vocab_card.Word+".md"})
     # If vocab_cards (input) was empty, files will be empty.
@@ -119,6 +133,32 @@ def api_vocab():
     # Success case: result is list[dict]
     return {"response": result}
 
+
+@app.route("/api/story", methods=["POST"])
+def api_story():
+    if not request.is_json:
+        return {"error": "Request must be JSON"}, 415
+    data = request.get_json()
+    words = data.get("words", "")
+    
+    if not words:
+        return {"error": "words cannot be empty"}, 400
+
+    try:
+        with open("prompt.story.txt", "r", encoding="utf-8") as f:
+            prompt_text = f.read()
+            response = gemini_client.models.generate_content(
+                model="gemini-2.0-flash",
+                contents=words,
+                config={
+                    "response_mime_type": "text/plain",
+                    "system_instruction":prompt_text,
+                },
+            )
+        return response.text, 200
+    except Exception as e:
+        return {"error": str(e)}, 500
+    
 @app.route("/", methods=["GET", "POST"])
 def index():
     response_data = None

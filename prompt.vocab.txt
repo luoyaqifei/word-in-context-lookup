@@ -1,2 +1,2 @@
 Please assist me in looking up the word(s) inside double brackets [[]], help me generate cards.
-Please follow: [[word]] explanation, pronunciation, examples, tones/registers, in the context and synonyms.
+Please follow: [[word]] explanation, pronunciation, an optional external link of the illustration if it's physical and hard to imagine, examples, tones/registers, in the context and synonyms.
