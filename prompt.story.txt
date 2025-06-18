@@ -1,6 +1,5 @@
-Write a captivating story of less than 350 words using the following list of words: `{word_list}`
+Write a captivating story of 250 ~ 350 words using the following list of words: `{word_list}`
 
 Your response must follow these rules exactly:
-* The entire output must be a single line of text with no line breaks.
-* The output must start with the exact text: `#generated_story ` on a single line
+* The entire output must be single line of text with no line breaks, nor wrappers
 * In the story, enclose every word from the given list in double square brackets, like `[[word]]`.

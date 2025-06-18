@@ -90,6 +90,15 @@ def insert_markdown_file(markdown, filename):
         print(f"Creating new file: {file_path}")
     # Write the markdown content to the file
     # Use 'w' mode to overwrite the file if it exists
+    if os.path.exists(file_path):
+        # Only skip writing if the file exists and is not empty
+        if os.path.getsize(file_path) > 0:
+            print(f"File {file_path} already exists and is not empty. Skipping write.")
+            return
+        else:
+            print(f"File {file_path} already exists but is empty. Overwriting.")
+    else:
+        print(f"Creating new file: {file_path}")
     with open(file_path, "w", encoding="utf-8") as f:
         f.write(markdown)
     
@@ -186,6 +195,6 @@ def lookup_insert(input_text: str) -> list[dict] | str:
     except Exception as e:
         app.logger.error(f"Unexpected error in lookup_insert: {e}", exc_info=True)
         return f"An unexpected error occurred. Please check the server logs. Traceback: {e}"
-    
-if __name__ == "__main__":
-    app.run(debug=True)
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5050, debug=True)
